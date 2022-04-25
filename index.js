@@ -15,25 +15,34 @@ app.all("*", (req, res, next) => {
 });
 
 app.post("/api/user", (req, res) => {
-  let user = req.body;
-  id++;
-  user = {
-    id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    street: user.street,
-    city: user.city,
-    emailAdress: user.emailAdress,
-    phonenNumber: user.phoneNumber,
-    password: user.password,
-    roles: user.roles,
-  };
-  console.log(user);
-  database.push(user);
-  res.status(201).json({
-    status: 201,
-    result: database,
-  });
+  const result = database.filter(
+    (user) => user.emailaddress == req.body.emailaddress
+  );
+  if (result.length > 0) {
+    res.status(409).json({
+      message: "User was not added to database, because the email adress is already in use",
+    });
+  } else {
+    let user = req.body;
+    id++;
+    user = {
+      id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      street: user.street,
+      city: user.city,
+      emailAdress: user.emailAdress,
+      phonenNumber: user.phoneNumber,
+      password: user.password,
+      roles: user.roles,
+    };
+    console.log(user);
+    database.push(user);
+    res.status(201).json({
+      status: 201,
+      result: database,
+    });
+  }
 });
 
 app.get("/api/user", (req, res, next) => {
@@ -83,10 +92,10 @@ app.put("/api/user/:userId", (req, res, next) => {
   const userId = req.params.userId;
   console.log(`User met ID ${userId} gezocht`);
   const result = database.findIndex((user) => user.id == userId);
-  if (result > -1) {  
+  if (result > -1) {
     let user = req.body;
     database[result] = {
-      id: result + 1,
+      id: userId,
       firstName: user.firstName,
       lastName: user.lastName,
       street: user.street,
