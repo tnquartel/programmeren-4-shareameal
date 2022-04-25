@@ -14,6 +14,13 @@ app.all("*", (req, res, next) => {
   next();
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 200,
+    result: 'Hello World!',
+  });
+});
+
 app.post("/api/user", (req, res) => {
   const result = database.filter(
     (user) => user.emailaddress == req.body.emailaddress
