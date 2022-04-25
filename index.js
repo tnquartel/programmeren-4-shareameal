@@ -14,51 +14,117 @@ app.all("*", (req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    status: 200,
-    result: "Hello World",
-  });
-});
-
-app.post("/api/movie", (req, res) => {
-  let movie = req.body;
+app.post("/api/user", (req, res) => {
+  let user = req.body;
   id++;
-  movie = {
+  user = {
     id,
-    ...movie,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    street: user.street,
+    city: user.city,
+    emailAdress: user.emailAdress,
+    phonenNumber: user.phoneNumber,
+    password: user.password,
+    roles: user.roles,
   };
-  console.log(movie);
-  database.push(movie);
+  console.log(user);
+  database.push(user);
   res.status(201).json({
     status: 201,
     result: database,
   });
 });
 
-app.get("/api/movie/:movieId", (req, res, next) => {
-  const movieId = req.params.movieId;
-  console.log(`Movie met ID ${movieId} gezocht`);
-  let movie = database.filter((item) => item.id == movieId);
-  if (movie.length > 0) {
-    console.log(movie);
-    res.status(200).json({
-      status: 200,
-      result: movie,
-    });
-  } else {
-    res.status(401).json({
-      status: 401,
-      result: `Movie with ID ${movieId} not found`,
-    });
-  }
-});
-
-app.get("/api/movie", (req, res, next) => {
+app.get("/api/user", (req, res, next) => {
   res.status(200).json({
     status: 200,
     result: database,
   });
+});
+
+app.get("/api/user/:userId", (req, res, next) => {
+  const userId = req.params.userId;
+  console.log(`User met ID ${userId} gezocht`);
+  let user = database.filter((item) => item.id == userId);
+  if (user.length > 0) {
+    console.log(user);
+    res.status(200).json({
+      status: 200,
+      result: user,
+    });
+  } else {
+    res.status(401).json({
+      status: 401,
+      result: `User with ID ${userId} not found`,
+    });
+  }
+});
+
+app.get("/api/user/profile/:userId", (req, res, next) => {
+  const userId = req.params.userId;
+  console.log(`User met ID ${userId} gezocht`);
+  let user = database.filter((item) => item.id == userId);
+  if (user.length > 0) {
+    console.log(user);
+    res.status(401).json({
+      status: 401,
+      result: `Feature not realised yet`,
+    });
+  } else {
+    res.status(401).json({
+      status: 401,
+      result: `User with ID ${userId} not found, and this feature is not yet realised`,
+    });
+  }
+});
+
+app.put("/api/user/:userId", (req, res, next) => {
+  const userId = req.params.userId;
+  console.log(`User met ID ${userId} gezocht`);
+  const result = database.findIndex((user) => user.id == userId);
+  if (result > -1) {  
+    let user = req.body;
+    database[result] = {
+      id: result + 1,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      street: user.street,
+      city: user.city,
+      emailAdress: user.emailAdress,
+      phoneNumber: user.phoneNumber,
+      password: user.password,
+      roles: user.roles,
+    };
+    res.status(201).json({
+      status: 201,
+      result: database[result],
+    });
+  } else {
+    res.status(401).json({
+      status: 401,
+      result: `User with ID ${userId} not found`,
+    });
+  }
+});
+
+app.delete("/api/user/:userId", (req, res, next) => {
+  const userId = req.params.userId;
+  console.log(`User met ID ${userId} gezocht`);
+  let user = database.filter((item) => item.id == userId);
+  if (user.length > 0) {
+    console.log(user);
+    database.splice(userId - 1, 1);
+    res.status(200).json({
+      status: 200,
+      result: `User with ID ${userId} succesfully deleted`
+    });
+  } else {
+    res.status(401).json({
+      status: 401,
+      result: `User with ID ${userId} not found`,
+    });
+  }
 });
 
 app.all("*", (req, res) => {
@@ -69,5 +135,5 @@ app.all("*", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`App listening on port ${port}`);
 });
