@@ -1,7 +1,26 @@
+const assert = require("assert");
 let database = [];
 let id = 0;
 
 let controller = {
+  validateUser: (req, res, next) => {
+    let user = req.body;
+    let { firstName, lastName, emailAdress, password } = user;
+    try {
+      assert(typeof firstName === "string", "First name must be a string");
+      assert(typeof lastName === "string", "Last name must be a string");
+      assert(typeof emailAdress === "string", "Email address must be a string");
+      assert(typeof password === "string", "Password must be a string");
+      next();
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({
+        status: 400,
+        result: err.toString(),
+      });
+    }
+    next();
+  },
   addUser: (req, res) => {
     const result = database.filter(
       (user) => user.emailaddress == req.body.emailaddress
@@ -21,7 +40,7 @@ let controller = {
         street: user.street,
         city: user.city,
         emailAdress: user.emailAdress,
-        phonenNumber: user.phoneNumber,
+        phoneNumber: user.phoneNumber,
         password: user.password,
         roles: user.roles,
       };
