@@ -17,7 +17,7 @@ let controller = {
         status: 400,
         result: err.message,
       };
-      next(err);
+      next(error);
     }
   },
   addUser: (req, res) => {
