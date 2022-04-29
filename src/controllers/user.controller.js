@@ -7,7 +7,7 @@ let controller = {
     let user = req.body;
     let { firstName, lastName, emailAdress, password } = user;
     const result = database.filter(
-      (user) => user.emailaddress == req.body.emailaddress
+      (newUser) => newUser.emailAdress == req.body.emailAdress
     );
     try {
       assert(typeof firstName === "string", "First name must be a string");
