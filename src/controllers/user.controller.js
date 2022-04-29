@@ -1,5 +1,6 @@
 const assert = require("assert");
 let database = [];
+const pool = require("../../dbtest");
 let id = 0;
 
 let controller = {
@@ -49,6 +50,15 @@ let controller = {
     });
   },
   getAllUsers: (req, res) => {
+    pool.getConnection(function (err, connection) {
+      connection.query("SELECT * FROM user", function (error, results, fields) {
+        if (error) throw error;
+        console.log(results);
+        // pool.end((err) => {
+        //   console.log("pool was closed");
+        // });
+      });
+    });
     res.status(200).json({
       status: 200,
       result: database,
