@@ -22,6 +22,9 @@ describe("Manage users", () => {
           //first name ontbreekt,
           lastName: "Quartel",
           emailAdress: "thomasquartel@outlook.com",
+          street: "Buijenstraat",
+          city: "Roosendaal",
+          phoneNumber: "0612345678",
           password: "password",
         })
         .end((err, res) => {
@@ -30,7 +33,7 @@ describe("Manage users", () => {
           status.should.equals(400);
           result.should.be
             .a("string")
-            .that.equals("First name must be a string");
+            .that.equals("FirstName must be a string");
           done();
         });
     });
@@ -48,6 +51,9 @@ describe("Manage users", () => {
           firstName: "Thomas",
           lastName: "Quartel",
           emailAdress: 100,
+          street: "Buijenstraat",
+          city: "Roosendaal",
+          phoneNumber: "0612345678",
           password: "password",
         })
         .end((err, res) => {
@@ -56,7 +62,7 @@ describe("Manage users", () => {
           status.should.equals(400);
           result.should.be
             .a("string")
-            .that.equals("Email address must be a string");
+            .that.equals("EmailAddress must be a string");
           done();
         });
     });
@@ -74,6 +80,9 @@ describe("Manage users", () => {
           firstName: "Thomas",
           lastName: "Quartel",
           emailAdress: "thomasquartel@outlook.com",
+          street: "Buijenstraat",
+          city: "Roosendaal",
+          phoneNumber: "0612345678",
           password: 100,
         })
         .end((err, res) => {
@@ -95,6 +104,9 @@ describe("Manage users", () => {
         firstName: "Thomas",
         lastName: "Quartel",
         emailAdress: "thomasquartel@outlook.com",
+        street: "Buijenstraat",
+        city: "Roosendaal",
+        phoneNumber: "0612345678",
         password: "password",
       };
       chai.request(server).post("/api/user").send(user).end();
@@ -105,6 +117,9 @@ describe("Manage users", () => {
           firstName: "Thomas",
           lastName: "Quartel",
           emailAdress: "thomasquartel@outlook.com",
+          street: "Buijenstraat",
+          city: "Roosendaal",
+          phoneNumber: "0612345678",
           password: "password",
         })
         .end((err, res) => {
@@ -130,6 +145,9 @@ describe("Manage users", () => {
         firstName: "Thomas",
         lastName: "Quartel",
         emailAdress: "testmail@mail.com",
+        street: "Buijenstraat",
+        city: "Roosendaal",
+        phoneNumber: "0612345678",
         password: "password",
       };
       chai

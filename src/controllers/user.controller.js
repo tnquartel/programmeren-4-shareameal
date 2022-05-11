@@ -1,19 +1,28 @@
 const assert = require("assert");
-let database = [];
 const pool = require("../../dbtest");
-let id = 0;
 
 let controller = {
   validateUser: (req, res, next) => {
     let user = req.body;
-    let { firstName, lastName, emailAdress, password } = user;
+    let {
+      firstName,
+      lastName,
+      street,
+      city,
+      emailAdress,
+      phoneNumber,
+      password,
+    } = user;
     const result = database.filter(
       (newUser) => newUser.emailAdress == req.body.emailAdress
     );
     try {
-      assert(typeof firstName === "string", "First name must be a string");
-      assert(typeof lastName === "string", "Last name must be a string");
-      assert(typeof emailAdress === "string", "Email address must be a string");
+      assert(typeof firstName === "string", "FirstName must be a string");
+      assert(typeof lastName === "string", "LastName must be a string");
+      assert(typeof street === "string", "Street must be a string");
+      assert(typeof city === "string", "City must be a string");
+      assert(typeof emailAdress === "string", "EmailAddress must be a string");
+      assert(typeof phoneNumber === "string", "PhoneNumber must be a string");
       assert(typeof password === "string", "Password must be a string");
       assert(
         result.length == 0,
@@ -28,126 +37,121 @@ let controller = {
       next(error);
     }
   },
+  validateId: (req, res, next) => {
+    const userId = req.params.id;
+    try {
+      assert(Number.isInteger(parseInt(userId)), "Id must be a number");
+      next();
+    } catch (err) {
+      console.log(req.body);
+      const error = {
+        status: 400,
+        message: err.message,
+      };
+
+      console.log(error);
+      next(error);
+    }
+  },
   addUser: (req, res) => {
-    let user = req.body;
-    id++;
-    user = {
-      id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      street: user.street,
-      city: user.city,
-      emailAdress: user.emailAdress,
-      phoneNumber: user.phoneNumber,
-      password: user.password,
-      roles: user.roles,
-    };
-    console.log(user);
-    database.push(user);
-    res.status(200).json({
-      status: 200,
-      result: user,
+    const user = req.body;
+    pool.query("INSERT INTO user SET ?", user, (dbError, result) => {
+      if (dbError) {
+        console.log(dbError.message);
+        const error = {
+          status: 409,
+          message: "User has not been added",
+          result: "User is niet toegevoegd in database",
+        };
+        next(error);
+      } else {
+        console.log(result.insertId);
+        user.userId = result.insertId;
+        res.status(201).json({
+          status: 201,
+          message: "User is toegevoegd in database",
+          result: user,
+        });
+      }
     });
   },
   getAllUsers: (req, res) => {
-    pool.getConnection(function (err, connection) {
-      connection.query("SELECT * FROM user", function (error, results, fields) {
-        if (error) throw error;
-        console.log(results);
-        // pool.end((err) => {
-        //   console.log("pool was closed");
-        // });
+    let users = [];
+    pool.query("SELECT * FROM user", (error, results, fields) => {
+      results.forEach((user) => {
+        users.push(user);
       });
-    });
-    res.status(200).json({
-      status: 200,
-      result: database,
+      res.status(200).json({
+        status: 200,
+        result: users,
+      });
     });
   },
   getUserById: (req, res, next) => {
-    const userId = req.params.userId;
-    console.log(`User met ID ${userId} gezocht`);
-    let user = database.filter((item) => item.id == userId);
-    if (user.length > 0) {
-      console.log(user);
-      res.status(200).json({
-        status: 200,
-        result: user,
-      });
-    } else {
-      const error = {
-        status: 401,
-        result: `User with ID ${userId} not found`,
-      };
-      next(error);
-    }
+    const userId = req.params.id;
+    pool.query(
+      `SELECT * FROM user WHERE id =${userId}`,
+      (err, results, fields) => {
+        if (err) throw err;
+
+        if (results[0]) {
+          res.status(200).json({
+            status: 200,
+            result: results,
+          });
+        } else {
+          const error = {
+            status: 404,
+            message: "User with provided Id does not exist",
+          };
+          next(error);
+        }
+      }
+    );
   },
-  getUserProfile: (req, res, next) => {
-    const userId = req.params.userId;
-    console.log(`User met ID ${userId} gezocht`);
-    let user = database.filter((item) => item.id == userId);
-    if (user.length > 0) {
-      console.log(user);
-      const error = {
-        status: 401,
-        result: `Feature not realised yet`,
-      };
-      next(error);
-    } else {
-      const error = {
-        status: 401,
-        result: `User with ID ${userId} not found, and this feature is not yet realised`,
-      };
-      next(error);
-    }
+  getUserProfile: (req, res) => {
+    res.status(200).json({
+      message: "This feature is not yet implemented",
+    });
   },
   updateUser: (req, res, next) => {
-    const userId = req.params.userId;
-    console.log(`User met ID ${userId} gezocht`);
-    const result = database.findIndex((user) => user.id == userId);
-    if (result > -1) {
-      let user = req.body;
-      database[result] = {
-        id: userId,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        street: user.street,
-        city: user.city,
-        emailAdress: user.emailAdress,
-        phoneNumber: user.phoneNumber,
-        password: user.password,
-        roles: user.roles,
-      };
-      res.status(201).json({
-        status: 201,
-        result: database[result],
-      });
-    } else {
-      const error = {
-        status: 401,
-        result: `User with ID ${userId} not found`,
-      };
-      next(error);
-    }
+    const userId = req.params.id;
+    const user = req.body;
+    pool.query(
+      `UPDATE user SET firstName = '${user.firstName}', lastName = '${user.lastName}', street = '${user.street}', city = '${user.city}', emailAdress = '${user.emailAdress}', password = '${user.password}' WHERE id = ${userId}`,
+      (err, results) => {
+        const { affectedRows } = results;
+        if (err) throw err;
+
+        if (affectedRows == 0) {
+          const error = {
+            status: 404,
+            message: "User with provided id does not exist",
+            result: "User with provided id does not exist",
+          };
+          next(error);
+        } else {
+          res.status(200).json({ status: 200, result: "Succusful update!" });
+        }
+      }
+    );
   },
   deleteUser: (req, res, next) => {
-    const userId = req.params.userId;
-    console.log(`User met ID ${userId} gezocht`);
-    let user = database.filter((item) => item.id == userId);
-    if (user.length > 0) {
-      console.log(user);
-      database.splice(userId - 1, 1);
-      res.status(200).json({
-        status: 200,
-        result: `User with ID ${userId} succesfully deleted`,
-      });
-    } else {
-      const error = {
-        status: 401,
-        result: `User with ID ${userId} not found`,
-      };
-      next(error);
-    }
+    const userId = req.params.id;
+    pool.query(`DELETE FROM user WHERE id=${userId}`, (err, results) => {
+      if (err) throw err;
+      const { affectedRows } = results;
+      if (!affectedRows) {
+        const error = {
+          status: 400,
+          result: "User does not exist",
+        };
+        next(error);
+      } else {
+        res.status(200).json({ status: 200, result: "Succesful deletion" });
+      }
+    });
   },
 };
+
 module.exports = controller;
