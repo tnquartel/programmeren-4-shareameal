@@ -1,6 +1,8 @@
-const mysql = require("mysql");
 require("dotenv").config();
+
+const mysql = require("mysql2");
 const pool = mysql.createPool({
+  multipleStatements: true,
   connectionLimit: 10,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -10,11 +12,3 @@ const pool = mysql.createPool({
 });
 
 module.exports = pool;
-
-pool.on("acquire", function (connection) {
-  console.log("Connection %d acquired", connection.threadId);
-});
-
-pool.on("connection", function (connection) {
-  connection.query("SET SESSION auto_increment_increment=1");
-});
