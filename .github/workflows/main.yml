@@ -4,15 +4,16 @@ on:
   push:
     branches:
       - main
-integrationtests:
-  runs-on: ubuntu-latest
-  env:
-    MYSQL_ROOT_PASSWORD: root # default root password to use must be 'root'
-    DB_HOST: localhost
-    DB_PORT: 3306
-    DB_DATABASE: share_a_meal
-    DB_USER: root
-    DB_PASSWORD: root
+jobs:      
+  integrationtests:
+    runs-on: ubuntu-latest
+    env:
+      MYSQL_ROOT_PASSWORD: root # default root password to use must be 'root'
+      DB_HOST: localhost
+      DB_PORT: 3306
+      DB_DATABASE: share_a_meal
+      DB_USER: root
+      DB_PASSWORD: root
   services:
     mysql:
       image: mysql:5.7
@@ -41,7 +42,6 @@ integrationtests:
       run: |
         npm test -- --DB_PASSWORD $MYSQL_ROOT_PASSWORD --DB_USER root --DB_NAME $DB_DATABASE
 
-jobs:
   deploy:
   needs: integrationtests
     runs-on: ubuntu-latest
