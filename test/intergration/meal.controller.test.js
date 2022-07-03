@@ -1,4 +1,4 @@
-process.env.DB_DATABASE = process.env.DB_DATABASE || "shareamealtestdb";
+process.env.DB_DATABASE = process.env.DB_DATABASE || "shareameal";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../../index");
@@ -12,11 +12,11 @@ const CLEAR_DB =
 
 const INSERT_JOHN_DOE =
   "INSERT INTO `user` (`id`, `firstName`, `lastName`, `emailAdress`, `password`, `street`, `city`, `isActive` ) VALUES" +
-  '(343, "John", "Doe", "j.doe@server.com", "test", "test", "test", false);';
+  '(46, "John", "Doe", "j.doe@server.com", "test", "test", "test", false);';
 const INSERT_MEAL_JOHN_DOE =
-  "INSERT INTO `meal` (`id`, `isActive`, `isVega`, `isVegan`, `isToTakeHome`, `maxAmountOfParticipants`, `price`, `imageUrl`, `cookId`, `name`, `description`, `allergenes`, `dateTime`) VALUES (1, '0', '0', '0', '1', '6', '10', '', '343', 'Test maaltijd', 'Dit is een test maaltijd', '', '1000-01-01 00:00:00')";
+  "INSERT INTO `meal` (`id`, `isActive`, `isVega`, `isVegan`, `isToTakeHome`, `maxAmountOfParticipants`, `price`, `imageUrl`, `cookId`, `name`, `description`, `allergenes`, `dateTime`) VALUES (1, '0', '0', '0', '1', '6', '10', '', '46', 'Test maaltijd', 'Dit is een test maaltijd', '', '1000-01-01 00:00:00')";
 const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0MywiaWF0IjoxNjUyNzc3OTI3LCJleHAiOjE2NTM4MTQ3Mjd9.lOehNhgPJlTzvZVWvvsCNob4mtkjfRsF5UIv6cCIRIQ";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQ2LCJpYXQiOjE2NTY4NzQ1MTcsImV4cCI6MTY1NzkxMTMxN30.DvTLihHeLOwnis92OSOgyqvDsGIvpMd-wYKuc-QC0qg";
 
 chai.should();
 chai.use(chaiHttp);
@@ -166,7 +166,7 @@ describe("UC meals", () => {
               isVegan: 0,
             })
             .set({
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTY1MzA1NTI5NSwiZXhwIjoxNjU0MDkyMDk1fQ.OKjPkj0LsoVzksiIHt1UcXzcLDohIs6gjU-C0N-9ROg`,
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0NiwiaWF0IjoxNjU2ODc2NTAwLCJleHAiOjE2NTc5MTMzMDB9.JDabkT7BEif7Jep1_Gez103ze4mIygmkQ5Wg6sUKydY`,
             })
             .end((req, res) => {
               res.should.be.an("object");
@@ -328,7 +328,7 @@ describe("UC meals", () => {
             .request(server)
             .delete("/api/meal/1")
             .set({
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTY1MzA1NTI5NSwiZXhwIjoxNjU0MDkyMDk1fQ.OKjPkj0LsoVzksiIHt1UcXzcLDohIs6gjU-C0N-9ROg`,
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0NiwiaWF0IjoxNjU2ODc2NTAwLCJleHAiOjE2NTc5MTMzMDB9.JDabkT7BEif7Jep1_Gez103ze4mIygmkQ5Wg6sUKydY`,
             })
             .end((req, res) => {
               res.should.be.an("object");
@@ -351,7 +351,7 @@ describe("UC meals", () => {
             .request(server)
             .delete("/api/meal/1000000")
             .set({
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTY1MzA1NTI5NSwiZXhwIjoxNjU0MDkyMDk1fQ.OKjPkj0LsoVzksiIHt1UcXzcLDohIs6gjU-C0N-9ROg`,
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0NiwiaWF0IjoxNjU2ODc2NTAwLCJleHAiOjE2NTc5MTMzMDB9.JDabkT7BEif7Jep1_Gez103ze4mIygmkQ5Wg6sUKydY`,
             })
             .end((req, res) => {
               res.should.be.an("object");

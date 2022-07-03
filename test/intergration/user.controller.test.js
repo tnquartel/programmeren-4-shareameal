@@ -1,4 +1,4 @@
-process.env.DB_DATABASE = process.env.DB_DATABASE || "shareamealtestdb";
+process.env.DB_DATABASE = process.env.DB_DATABASE || "shareameal";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../../index");
@@ -21,10 +21,10 @@ const INSERT_USER_2 =
 
 const INSERT_JOHN_DOE =
   "INSERT INTO `user` (`id`, `firstName`, `lastName`, `emailAdress`, `password`, `street`, `city`, `isActive` ) VALUES" +
-  '(343, "John", "Doe", "j.doe@server.com", "test", "test", "test", false);';
+  '(46, "John", "Doe", "j.doe@server.com", "test", "test", "test", false);';
 
 const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0MywiaWF0IjoxNjUyNzc3OTI3LCJleHAiOjE2NTM4MTQ3Mjd9.lOehNhgPJlTzvZVWvvsCNob4mtkjfRsF5UIv6cCIRIQ";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQ2LCJpYXQiOjE2NTY4NzQ1MTcsImV4cCI6MTY1NzkxMTMxN30.DvTLihHeLOwnis92OSOgyqvDsGIvpMd-wYKuc-QC0qg";
 
 chai.should();
 chai.use(chaiHttp);
@@ -117,7 +117,7 @@ describe("TC-User", () => {
         .post("/api/user")
         .send({
           firstName: "Test",
-          lastName: "Tophoven",
+          lastName: "Test",
           emailAdress: "test",
         })
         .end((err, res) => {
@@ -134,7 +134,7 @@ describe("TC-User", () => {
         .post("/api/user")
         .send({
           firstName: "Test",
-          lastName: "Tophoven",
+          lastName: "Test",
           //Will be checked!
           emailAdress: "nietvalidemail",
           street: "street",
@@ -156,7 +156,7 @@ describe("TC-User", () => {
         .post("/api/user")
         .send({
           firstName: "Test",
-          lastName: "Tophoven",
+          lastName: "Test",
           emailAdress: "nietvalidemail",
           street: "street",
           city: "city",
@@ -179,7 +179,7 @@ describe("TC-User", () => {
           .post("/api/user")
           .send({
             firstName: "Test",
-            lastName: "Tophoven",
+            lastName: "Test",
             emailAdress: "d.ambesi@avans.nl",
             street: "street",
             city: "city",
@@ -201,7 +201,7 @@ describe("TC-User", () => {
     it("TC-201-5 When a user is succesfully added, a valid response should be returned", (done) => {
       const user = {
         firstName: "Test",
-        lastName: "Tophoven",
+        lastName: "Test",
         emailAdress: "test@mail.com",
         password: "wachtwoord",
         isActive: 1,
@@ -409,7 +409,7 @@ describe("TC-User", () => {
       pool.query(INSERT_JOHN_DOE, () => {
         chai
           .request(server)
-          .get("/api/user/343")
+          .get("/api/user/46")
           .set({ Authorization: `Bearer ${token}` })
           .end((req, res) => {
             res.should.be.an("object");
@@ -430,10 +430,10 @@ describe("TC-User", () => {
       pool.query(INSERT_JOHN_DOE, () => {
         chai
           .request(server)
-          .put("/api/user/343")
+          .put("/api/user/46")
           .send({
             firstName: "Test",
-            lastName: "Tophoven",
+            lastName: "Test",
             password: "wachtwoord",
             isActive: 1,
             phoneNumber: "012345678",
@@ -457,10 +457,10 @@ describe("TC-User", () => {
       pool.query(INSERT_JOHN_DOE, () => {
         chai
           .request(server)
-          .put("/api/user/343")
+          .put("/api/user/46")
           .send({
             firstName: "Test",
-            lastName: "Tophoven",
+            lastName: "Test",
             emailAdress: "test@mail.com",
             password: "wachtwoord",
             isActive: 1,
@@ -486,10 +486,10 @@ describe("TC-User", () => {
     it("TC-205-4 Gebruiker bestaat niet", (done) => {
       chai
         .request(server)
-        .put("/api/user/343")
+        .put("/api/user/46")
         .send({
           firstName: "Test",
-          lastName: "Tophoven",
+          lastName: "Test",
           emailAdress: "test@mail.com",
           password: "wachtwoord",
           isActive: 1,
@@ -512,10 +512,10 @@ describe("TC-User", () => {
     it("TC-205-5 Niet ingelogd", (done) => {
       chai
         .request(server)
-        .put("/api/user/343")
+        .put("/api/user/46")
         .send({
           firstName: "Test",
-          lastName: "Tophoven",
+          lastName: "Test",
           emailAdress: "test@mail.com",
           password: "wachtwoord",
           isActive: 1,
@@ -538,10 +538,10 @@ describe("TC-User", () => {
       pool.query(INSERT_JOHN_DOE, () => {
         chai
           .request(server)
-          .put("/api/user/343")
+          .put("/api/user/46")
           .send({
             firstName: "Test",
-            lastName: "Tophoven",
+            lastName: "Test",
             emailAdress: "test@mail.com",
             password: "wachtwoord",
             isActive: 1,
@@ -565,7 +565,7 @@ describe("TC-User", () => {
     it("TC-206-1 Gebruiker bestaat niet", (done) => {
       chai
         .request(server)
-        .delete("/api/user/343")
+        .delete("/api/user/46")
         .set({ Authorization: `Bearer ${token}` })
         .end((req, res) => {
           res.should.be.an("object");
@@ -578,7 +578,7 @@ describe("TC-User", () => {
     it("TC-206-2 Niet ingelogd", (done) => {
       chai
         .request(server)
-        .delete("/api/user/343")
+        .delete("/api/user/46")
         .end((req, res) => {
           res.should.be.an("object");
           let { status, message } = res.body;
@@ -592,9 +592,9 @@ describe("TC-User", () => {
     it("TC-206-3 Actor is geen eigenaar", (done) => {
       chai
         .request(server)
-        .delete("/api/user/343")
+        .delete("/api/user/46")
         .set({
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTY1MzA0NDM2NSwiZXhwIjoxNjU0MDgxMTY1fQ.BKKfJCqzDzgvqP8t3Ua7ZN8exCygM9rFUchKKE-l52g`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM2NSwiaWF0IjoxNjU2ODgxNjgxLCJleHAiOjE2NTc5MTg0ODF9.YcwwltmeUEjpo3w2KUF3tqjt3ZUJ7-K2Q-7mq6xQT3I`,
         })
         .end((req, res) => {
           res.should.be.an("object");
@@ -610,7 +610,7 @@ describe("TC-User", () => {
       pool.query(INSERT_JOHN_DOE, () => {
         chai
           .request(server)
-          .delete("/api/user/343")
+          .delete("/api/user/46")
           .set({
             Authorization: `Bearer ${token}`,
           })

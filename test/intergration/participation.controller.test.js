@@ -1,4 +1,4 @@
-process.env.DB_DATABASE = process.env.DB_DATABASE || "shareamealtestdb";
+process.env.DB_DATABASE = process.env.DB_DATABASE || "shareameal";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../../index");
@@ -12,14 +12,14 @@ const CLEAR_DB =
 
 const INSERT_JOHN_DOE =
   "INSERT INTO `user` (`id`, `firstName`, `lastName`, `emailAdress`, `password`, `street`, `city`, `isActive` ) VALUES" +
-  '(343, "John", "Doe", "j.doe@server.com", "test", "test", "test", false);';
+  '(46, "John", "Doe", "j.doe@server.com", "test", "test", "test", false);';
 const INSERT_MEAL_JOHN_DOE =
-  "INSERT INTO `meal` (`id`, `isActive`, `isVega`, `isVegan`, `isToTakeHome`, `maxAmountOfParticipants`, `price`, `imageUrl`, `cookId`, `name`, `description`, `allergenes`, `dateTime`) VALUES (1, '0', '0', '0', '1', '6', '10', '', '343', 'Koekjes', 'Thomas eet graag dikke koeken', '', '1000-01-01 00:00:00')";
+  "INSERT INTO `meal` (`id`, `isActive`, `isVega`, `isVegan`, `isToTakeHome`, `maxAmountOfParticipants`, `price`, `imageUrl`, `cookId`, `name`, `description`, `allergenes`, `dateTime`) VALUES (1, '0', '0', '0', '1', '6', '10', '', '46', 'Koekjes', 'Thomas eet graag dikke koeken', '', '1000-01-01 00:00:00')";
 const INSERT_JOHN_DOE_MEAL_PARTICIPATE =
-  "INSERT INTO meal_participants_user (mealId, userId) VALUES (1, 343) ";
+  "INSERT INTO meal_participants_user (mealId, userId) VALUES (1, 46) ";
 
 const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0MywiaWF0IjoxNjUyNzc3OTI3LCJleHAiOjE2NTM4MTQ3Mjd9.lOehNhgPJlTzvZVWvvsCNob4mtkjfRsF5UIv6cCIRIQ";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQ2LCJpYXQiOjE2NTY4NzQ1MTcsImV4cCI6MTY1NzkxMTMxN30.DvTLihHeLOwnis92OSOgyqvDsGIvpMd-wYKuc-QC0qg";
 
 chai.should();
 chai.use(chaiHttp);
@@ -127,7 +127,7 @@ describe("UC participation", () => {
         });
       });
     });
-    it("TC-403-3 Succesvol afgemeld", (done) => {
+    it("TC-402-3 Succesvol afgemeld", (done) => {
       pool.query(INSERT_JOHN_DOE, () => {
         pool.query(INSERT_MEAL_JOHN_DOE, () => {
           pool.query(INSERT_JOHN_DOE_MEAL_PARTICIPATE, () => {
